@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import json
 import pandas as pd
 import pprint
@@ -11,8 +12,9 @@ def get_values(res):
     vals = res[10:-5].split("_")
     feat = int(vals[0][4:])
     imp = int(vals[1][3:])
-    obs = int(vals[2][3:])
-    return feat, imp, obs
+    imp_ratio = int(vals[2][3:])
+    obs = int(vals[3][3:])
+    return feat, imp, imp_ratio, obs
 
 def get_overlap(data, imp):
     keys = list(data.keys())
@@ -61,30 +63,10 @@ for res in results:
     data = json.load(open(res, 'r'))
 
     # get feat, imp, and obs out of file name
-    feat, imp, obs = get_values(res)
-    imp_ratio = round(imp/feat, 2)
-    if imp_ratio not in gold_imps:
-        if imp_ratio < 0.03:
-            imp_ratio = 0.01
-        elif 0.03 <= imp_ratio < 0.075:
-            imp_ratio = 0.05
-        elif 0.075 <= imp_ratio < 0.175:
-            imp_ratio = 0.1
-        elif 0.175 <= imp_ratio < 0.375:
-            imp_ratio = 0.25
-        elif 0.3735 <= imp_ratio < 0.625:
-            imp_ratio = 0.5
-        elif 0.625 <= imp_ratio < 0.825:
-            imp_ratio = 0.75
-        elif 0.825 <= imp_ratio < 0.95:
-            imp_ratio = 0.9
-        elif 0.95 <= imp_ratio:
-            imp_ratio = 0.99
-        else:
-            imp_ratio = None
+    feat, imp, imp_ratio, obs = get_values(res)
+    print(feat, imp, imp_ratio, obs)
 
-    if feat == imp:
-        continue
+    sys.exit()
 
     # calculate overlap and distance
     olap = get_overlap(data['sum'], imp)
@@ -97,17 +79,8 @@ for res in results:
 # print("Dataframe saved!")
 
 # Plot time!!
-# print(df['imp_ratio'])
-# print(df['imp_ratio'].value_counts())
-# print(df)
-
-
-# print(df.loc[df['obs'] == 100])
 obs_df = df.loc[df['obs'] == 100]
-print(df['feats'].value_counts())
-obs_df = obs_df.loc[obs_df['feats'] == 5]
 print(obs_df)
-# print(obs_df['imp_ratio'].unique())
 
 mapping = obs_df.pivot('feats', 'imp_ratio', 'distance')
 # print(mapping)
