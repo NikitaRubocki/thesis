@@ -5,7 +5,7 @@ from sklearn.datasets import make_regression
 
 class Dataset:
 
-    def generate(feat, imp, obs, rand=21):
+    def generate(feat, imp, imp_ratio, obs, rand=21):
         # create random data
         X, y, coef = make_regression(
             n_features=feat,
@@ -31,5 +31,5 @@ class Dataset:
         df.rename(columns=adj_col_names, inplace=True)
 
         # save dataset
-        fname = f"feat{feat}_imp{imp}_obs{obs}.csv"
+        fname = f"feat{feat}_imp{imp}_rat{imp_ratio}_obs{obs}.csv"
         df.to_csv(f"datasets/{fname}", index=False)
