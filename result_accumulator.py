@@ -3,16 +3,9 @@ import re
 import json
 import pandas as pd
 import pprint
-
-# Gather results in dir
-results = []
-for root, dirs, files in os.walk("./results"):
-	for file in files:
-		results.append(os.path.join(root, file))
-
-# Setup dataframe
-df_cols = ['feats', 'imp_ratio', 'obs', 'sum_overlap', 'sum_distance', 'avg_overlap', 'avg_distance']
-df = pd.DataFrame(columns=df_cols)
+import statistics as st
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def get_values(res):
     vals = res[10:-5].split("_")
@@ -30,28 +23,94 @@ def get_overlap(data, imp):
             imp_count += 1
     return round(imp_count/imp, 2)
 
-# CHANGE THIS LATER
-results = results[17:]
+def get_distance(data):
+    # break data into imps and other
+    imps, other = {}, {}
+    for key, val in data.items():
+        if 'imp' in key:
+            imps[key] = val
+        else:
+            other[key] = val
 
+    # calculate mean and subtract
+    imp_mean = st.mean(imps.values())
+    other_mean = st.mean(other.values())
+    dist = abs(imp_mean - other_mean)
+
+    # calculate range and standardize
+    keys = list(data.keys())
+    data_range = data[keys[0]] - data[keys[-1]]
+    return round(dist/data_range, 4)
+
+
+# Gather results in dir
+results = []
+for root, dirs, files in os.walk("./results"):
+	for file in files:
+		results.append(os.path.join(root, file))
+
+# Setup dataframe
+df_cols = ['res_file', 'feats', 'imp_ratio', 'obs', 'overlap', 'distance']
+df = pd.DataFrame(columns=df_cols)
+
+# Do some calculations
+# calculations are the same for sum and avg, so take sum
 count = 0
+gold_imps = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]
 for res in results:
-    print("RESULT:", res)
+    data = json.load(open(res, 'r'))
+
     # get feat, imp, and obs out of file name
     feat, imp, obs = get_values(res)
+    imp_ratio = round(imp/feat, 2)
+    if imp_ratio not in gold_imps:
+        if imp_ratio < 0.03:
+            imp_ratio = 0.01
+        elif 0.03 <= imp_ratio < 0.075:
+            imp_ratio = 0.05
+        elif 0.075 <= imp_ratio < 0.175:
+            imp_ratio = 0.1
+        elif 0.175 <= imp_ratio < 0.375:
+            imp_ratio = 0.25
+        elif 0.3735 <= imp_ratio < 0.625:
+            imp_ratio = 0.5
+        elif 0.625 <= imp_ratio < 0.825:
+            imp_ratio = 0.75
+        elif 0.825 <= imp_ratio < 0.95:
+            imp_ratio = 0.9
+        elif 0.95 <= imp_ratio:
+            imp_ratio = 0.99
+        else:
+            imp_ratio = None
 
-    # bring in json data
-    data = json.load(open(res, 'r'))
-    # pprint.pprint(data)
+    if feat == imp:
+        continue
 
-    # calculate overlap
-    sum_olap = get_overlap(data['sum'], imp)
-    avg_olap = get_overlap(data['average'], imp)
-    print(sum_olap, avg_olap)
+    # calculate overlap and distance
+    olap = get_overlap(data['sum'], imp)
+    dist = get_distance(data['sum'])
 
-    # calculate distance
+    # save to df
+    df.loc[len(df.index)] = [res[10:], feat, imp_ratio, obs, olap, dist]
 
-    # df.loc[len(df.index)] = [feat, imp, obs, sum_olap, sum_dist, avg_olap, avg_dist]
-    count += 1
-    if count == 3:
-        break
+# df.to_csv('overall_results.csv', index=False)
+# print("Dataframe saved!")
 
+# Plot time!!
+# print(df['imp_ratio'])
+# print(df['imp_ratio'].value_counts())
+# print(df)
+
+
+# print(df.loc[df['obs'] == 100])
+obs_df = df.loc[df['obs'] == 100]
+print(df['feats'].value_counts())
+obs_df = obs_df.loc[obs_df['feats'] == 5]
+print(obs_df)
+# print(obs_df['imp_ratio'].unique())
+
+mapping = obs_df.pivot('feats', 'imp_ratio', 'distance')
+# print(mapping)
+
+# sns.heatmap(mapping, cmap="BuPu")
+# plt.savefig("heatmap.png")
