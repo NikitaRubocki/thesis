@@ -12,7 +12,7 @@ fig = px.scatter_3d(
     # color='overlap', 
     color='distance', 
 )
-fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
+fig.update_layout(margin=dict(l=0.2, r=0.2, b=0.2, t=0.2))
 
 
 import dash
