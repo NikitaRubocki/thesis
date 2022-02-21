@@ -6,7 +6,9 @@ from sklearn.datasets import make_regression
 
 class Dataset:
 
-    def generate(feat, imp, imp_ratio, obs, rand=21):
+    # experiment02_07_22 seed: 21
+    # experiment02_21_22 seed: 42
+    def generate(feat, imp, imp_ratio, obs, rand=42):
         # create random data
         X, y, coef = make_regression(
             n_features=feat,
