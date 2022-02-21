@@ -1,5 +1,6 @@
 import numpy as np 
 import pandas as pd
+import math
 from sklearn.datasets import make_regression
 
 
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     imp_ratios = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99]
     observs = [10, 100, 1000, 2000, 5000, 7500, 10000]
 
-    Create datasets
+    # Create datasets
     print("Generating datasets...")
     count = 0
     for feat in feats:
