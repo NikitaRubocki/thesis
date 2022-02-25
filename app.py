@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load dataframe
-df = pd.read_csv("./experiment02_07_22/overall_results.csv")
+df = pd.read_csv("overall_results.csv")
 
 fig = px.scatter_3d(
     df, 
@@ -13,7 +13,7 @@ fig = px.scatter_3d(
     # color='distance', 
     x='feats', 
     y='obs', 
-    z='distance',
+    z='overlap',
     color='imp_ratio',
 )
 fig.update_layout(margin=dict(l=0.2, r=0.2, b=0.2, t=0.2))
