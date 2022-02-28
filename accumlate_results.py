@@ -55,7 +55,6 @@ df = pd.DataFrame(columns=df_cols)
 # Do some calculations
 # calculations are the same for sum and avg, so take sum
 count = 0
-gold_imps = [0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]
 for res in results:
     data = json.load(open(res, 'r'))
 
