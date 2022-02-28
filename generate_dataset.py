@@ -51,22 +51,22 @@ if __name__ == '__main__':
     # experiment 02_25_22 for p value test
     feats = list(range(10, 140, 20))
     imp_ratios = [x/100 for x in list(range(5, 100, 15))]
-    obs = list(range(100, 10001, 1500))
-    print(feats)
-    print(imp_ratios)
-    print(obs)
+    observs = list(range(100, 10001, 1500))
+    # print(feats)
+    # print(imp_ratios)
+    # print(observs)
 
-    # # Create datasets
-    # print("Generating datasets...")
-    # count = 0
-    # for feat in feats:
-    #     for rat in imp_ratios:
-    #         adj_imp = math.ceil(rat*feat)
-    #         if adj_imp == feat:
-    #             continue
-    #         for obs in observs:
-    #             if feat >= obs:
-    #                 continue
-    #             Dataset.generate(feat=feat, imp=adj_imp, imp_ratio=rat, obs=obs)
-    #             count += 1
-    # print(f"Dataset generation complete. {count} datasets created.\n")
+    # Create datasets
+    print("Generating datasets...")
+    count = 0
+    for feat in feats:
+        for rat in imp_ratios:
+            adj_imp = math.ceil(rat*feat)
+            if adj_imp == feat:
+                continue
+            for obs in observs:
+                if feat >= obs:
+                    continue
+                Dataset.generate(feat=feat, imp=adj_imp, imp_ratio=rat, obs=obs)
+                count += 1
+    print(f"Dataset generation complete. {count} datasets created.\n")
