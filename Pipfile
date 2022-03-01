@@ -17,6 +17,7 @@ pytest-describe = "*"
 treeinterpreter = "*"
 plotly = "*"
 dash = "*"
+statsmodels = "*"
 
 [dev-packages]
 
