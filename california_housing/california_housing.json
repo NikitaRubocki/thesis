@@ -1,0 +1,22 @@
+{
+    "sum": {
+        "MedInc": 66.0,
+        "HouseAge": 43.0,
+        "Longitude": 40.0,
+        "Latitude": 37.0,
+        "AveRooms": 34.0,
+        "AveOccup": 32.0,
+        "AveBedrms": 31.0,
+        "Population": 25.0
+    },
+    "average": {
+        "MedInc": 6.0,
+        "HouseAge": 3.9091,
+        "Longitude": 3.6364,
+        "Latitude": 3.3636,
+        "AveRooms": 3.0909,
+        "AveOccup": 2.9091,
+        "AveBedrms": 2.8182,
+        "Population": 2.2727
+    }
+}

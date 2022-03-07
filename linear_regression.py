@@ -6,7 +6,7 @@ df = pd.read_csv("overall_results.csv")
 
 # Split the data
 # Y = df['overlap']
-Y = df['distance']
+Y = df['overlap']
 X = df[['feats', 'imp_ratio', 'obs']]
 X = sm.add_constant(X)
 # print(X)
